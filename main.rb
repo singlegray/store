@@ -7,31 +7,51 @@ if Gem.win_platform?
   end
 end
 
-require_relative 'lib/product'
-require_relative 'lib/book'
-require_relative 'lib/film'
-require_relative 'lib/disc'
 require_relative 'lib/product_collection'
 require_relative 'lib/cart'
 
-collection = ProductCollection.from_dir(File.dirname(__FILE__) + '/data')
+collection = ProductCollection.from_dir("#{__dir__}/data")
 
-collection.sort!(by: :price, order: :asc)
-
-choice = 1
+collection.sort!(by: :title, order: :asc)
 
 cart = Cart.new
 
-until choice == 0
-  puts 'Что хотите купить?'
-  collection.to_a.each_with_index do |product, index|
-    puts "#{index + 1} #{product}"
-  end
-  puts 'Для завершения введите 0'
-  choice = gets.to_i
-  if choice !=0
-    cart.put(collection.to_a[choice - 1])
-  end
+loop do
+  collection.remove_out_of_stock!
+
+  puts <<~COLLECTION
+    Что хотите купить:
+
+    #{collection}
+    0. Выход
+
+  COLLECTION
+
+  print '> '
+
+  user_choice = $stdin.gets.to_i
+
+  break if user_choice <= 0
+
+  chosen_product = collection[user_choice]
+
+  next if chosen_product.nil?
+
+  cart << chosen_product
+  chosen_product.amount -= 1
+
+  puts <<~SUBTOTAL
+    Вы выбрали: #{chosen_product}
+
+    Всего товаров на сумму: #{cart.total} руб.
+
+  SUBTOTAL
 end
 
-puts cart
+puts <<~TOTAL
+  Вы купили:
+
+  #{cart}
+
+  С Вас — #{cart.total} руб. Спасибо за покупки!
+TOTAL

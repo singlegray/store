@@ -1,8 +1,9 @@
+require_relative 'product'
 class Film < Product
   attr_accessor :title, :year, :director
 
   def self.from_file(file_path)
-    lines = File.readlines(file_path, encoding: 'UTF-8').map { |l| l.chomp }
+    lines = File.readlines(file_path, encoding: 'UTF-8', chomp: true)
 
     self.new(
       title: lines[0],

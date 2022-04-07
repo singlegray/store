@@ -1,19 +1,19 @@
 class Cart
-
-  def initialize()
-    @pay = 0
+  def initialize
     @products = []
   end
 
-  def put(product)
-    @products << product
-    @pay += product.price
-    product.amount -= 1
+  def total
+    @products.sum(&:price)
+  end
+
+  def <<(new_product)
+    @products << new_product
   end
 
   def to_s
-    puts 'Вы купили'
-    @products.each { |product| puts product }
-    puts "С вас #{@pay}"
+    @products.tally.map.with_index(1) do |(product, amount), index|
+      "#{index}. #{product} - #{amount} шт."
+    end.join("\n")
   end
 end

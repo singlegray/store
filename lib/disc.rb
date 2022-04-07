@@ -1,8 +1,9 @@
+require_relative 'product'
 class Disc < Product
   attr_accessor :title, :year, :performer, :genre
 
   def self.from_file(file_path)
-    lines = File.readlines(file_path, encoding: 'UTF-8').map { |l| l.chomp }
+    lines = File.readlines(file_path, encoding: 'UTF-8', chomp: true)
 
     self.new(
       title: lines[0],
