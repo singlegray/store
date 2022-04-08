@@ -41,18 +41,18 @@ class ProductCollection
     @products.reverse! if order == :desc
     self
   end
-end
 
-def [](product_index)
-  @products[product_index - 1]
-end
+  def [](product_index)
+    @products[product_index - 1]
+  end
 
-def to_s
-  @products.map.with_index(1) do |product, index|
-    "#{index}. #{product}"
-  end.join("\n")
-end
+  def to_s
+    @products.map.with_index(1) do |product, index|
+      "#{index}. #{product}"
+    end.join("\n")
+  end
 
-def remove_out_of_stock!
-  @products.select! { |product| product.amount > 0 }
+  def remove_out_of_stock!
+    @products.select! { |product| product.amount > 0 }
+  end
 end
